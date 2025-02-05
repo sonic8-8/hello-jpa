@@ -17,5 +17,41 @@
     JPQL 은 엔티티 객체를 대상으로 쿼리를 작성하는 것이고
     SQL 은 데이터베이스 테이블을 대상으로 쿼리를 작성하는 것입니다
 
+=== 2. 기본 문법과 쿼리 API ===
 
+    1. 기본 문법 에시
+
+    select m from Member m where m.age > 18
+
+    2. 오퍼레이션: 데이터베이스에서 처리하는 작업이나 기능
+
+    CRUD operation: Create, Read, Update, Delete
+    트랜잭션 operation: commit, rollback, savepoint
+    조인 operation: inner join, left join 등
+    집계 operation: sum, avg, count, max, min
+    색인 operation: index 를 생성하거나 관리
+    제약조건 operation: PK, FK, CHECK 등 설정
+
+    3. TypedQuery, Query
+
+    반환 타입이 명확할 때
+    TypedQuery<Member> query = em.createQuery("select m from Member m", Member.class)
+
+    반환 타입이 명확하지 않을때
+    Query query = em.createQuery("select m.username, m.age from Member m")
+
+    4. 결과 조회 API
+
+    query.getResultList(): 결과가 하나 이상일 때 사용하면 됩니다
+
+    query.getSingleResult(): 결과가 정확히 하나일때 사용하면 되는데
+                             결과가 없거나 둘 이상이면 예외가 발생합니다 정확히 하나여야할때 사용해야겠죠
+
+    5. 파라미터 바인딩
+
+    TypedQuery<Member> query = em.createQuery(select m from Member m where m.username = :username)
+                        .setParameter("username", username);
+
+
+    순서로 바인딩 되긴 하는데 명확하게 String 으로 바인딩하는게 안전하겠죠
 
