@@ -120,3 +120,20 @@
 
     다만 패키지부터 경로를 다 작성해줘야한다는게 약간 불편합니다
     실무에선 Spring Data JPA 를 사용하기 때문에 괜찮음
+
+
+=== 4. 페이징 API ===
+
+    JPA 는 페이징을 매우 간단히 해결해줍니다
+    바로 예시를 봅시다
+
+    List<Member> results = em.createQuery("select m from Member m order by m.name desc", Member.class)
+        .setFirstResult(10)
+        .setMaxResults(20)
+        .getResultList();
+
+    setFirstResult(int startPosition): 조회 시작 위치
+    setMaxResults(int maxResult): 조회할 데이터 수
+
+    데이터베이스 방언을 고려하지 않아도 JPA 가 페이징을 알아서 처리해줍니다
+
