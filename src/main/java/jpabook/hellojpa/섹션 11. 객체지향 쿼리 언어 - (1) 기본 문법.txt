@@ -137,3 +137,29 @@
 
     데이터베이스 방언을 고려하지 않아도 JPA 가 페이징을 알아서 처리해줍니다
 
+=== 5. 조인 ===
+
+    1. 내부 조인
+    연관 관계가 있어야함
+        예시)
+        select m from Member m (inner) join m.team t
+
+    2. 외부 조인
+    연관 관계가 있어야함
+    left outer join 이라면 from 절 뒤에 나오는 엔티티를 기준으로 함
+        예시)
+        select m from Member m left (outer) join m.team t
+
+    3. 세타 조인
+    연관 관계가 없어도 가능
+    두 테이블을 카타시안 곱으로 모든 경우의 수를 만든 후
+    특정 조건에 맞는 것만 필터링하는 것으로
+    특정 필드가 동일할 경우에 사용
+        예시)
+        select m, t from Member m, Team t where m.username = t.name
+
+    4. on 절
+    조인 대상을 필터링하거나
+    연관관계 없는 엔티티를 외부 조인할 때 사용합니다
+        예시)
+        select m from Member m left (outer) join m.team t on t.name = '하이'
