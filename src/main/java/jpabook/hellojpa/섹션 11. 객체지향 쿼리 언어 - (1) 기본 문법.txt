@@ -224,7 +224,43 @@
     DB 에서는 하나의 테이블이지만 JPA 로 개발할 땐 엔티티 타입이기 때문에
     예를 들어
     m 이 싱글 테이블을 조회해오는데 이때 인스턴스가 Member 인 것만 조회하고 싶다면
-    TYPE() 함수를 사용할 수 있습니다
-    TYPE(m) = Member 이런식으로요
+    type() 함수를 사용할 수 있습니다
+    where type(m) = Member 이런식으로요
     뭐 Admin 인것만 조회해오고 싶다면 이렇게 작성하면 됨
-    TYPE(m) = Admin
+    where type(m) = Admin
+
+    나머지는 sql 과 문법이 같습니다 한 번 정리만
+    exists, in
+    and, or, not
+    =, >, <
+    between, like, is null
+
+=== 8. 조건식(case 등) ===
+
+    case 식은 if 문과 비슷하게 사용할 수 있음
+
+    예시)
+    select
+        case when m.age <= 10 then '학생요금'
+             when m.age >= 10 then '경로요금'
+             else '일반요금'
+        end
+    from Member m
+
+    select
+        case t.name
+            when '팀A' then '인센티브110%'
+            when '팀B' then '인센티브120%'
+            else '인센티브105%'
+        end
+    from Team t
+
+    coalesce(a, b): null 이 아닌 첫 번째 값을 반환
+        coalesce 는 합쳐지다라는 의미를 갖고있는데
+        숫자를 더하다 뭐 이런 의미가 아니라
+        여러 값들이 대표 값 하나로 수렴해서 뭉쳐지다 합쳐지다 이런 느낌임
+    nullif(a, b): 두 값이 같으면 null 반환하고 다르면 a 반환
+
+    예시)
+    select coalesce(m.username, '이름 없는 회원') from Member m
+    select nullif(m.username, '관리자') from Member m
