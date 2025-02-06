@@ -163,3 +163,36 @@
     연관관계 없는 엔티티를 외부 조인할 때 사용합니다
         예시)
         select m from Member m left (outer) join m.team t on t.name = '하이'
+
+=== 6. 서브 쿼리 ===
+
+    서브 쿼리를 사용하는 이유가 뭘까요
+    결론부터 말하자면
+    의미 있는 데이터를 조회하기 위한 전처리 과정이라고 생각하면 됩니다
+    먼저 데이터를 가공하거나 추출해서 메인 쿼리에서 사용할 수 있도록 하는 것임
+    그리고 이 데이터를 가지고 메인 쿼리에서 where 절을 통해 추가로 필터링 할 수 있겠죠
+
+    JPA 3.0까지는 서브 쿼리를 where 이랑 Having 절에서만 사용할 수 있었습니다
+    하지만 이제 3.1부터는 from 절에서도 사용할 수 있게됨
+    방법은 join lateral 을 사용하는 것입니다
+
+    예시)
+    나이가 평균보다 많은 회원
+    select m from Member m where m.age > (select avg(m2.age) from Member m2)
+
+    한 건이라도 주문한 고객
+    select m from Member m where (select count(o) from Order o where m = o.member) > 0
+
+    join lateral 예시
+    select m from Member m join lateral (select t from m.team t where t.name = m.username)
+
+    서브쿼리 연산자
+    exists: 서브 쿼리에 결과가 존재하면 참
+    all: 모두 만족하면 참
+    any, some: 하나라도 만족하면 참
+    in: 서브 쿼리 결과 중 하나라도 같은 게 있으면 참
+
+    예시)
+    select m from Member m where exists (select t from m.team t where t.name = '팀A')
+    select o from Order o where o.orderAmount > all (select p.stockAmount from Product p)
+    select m from Member m where m.team = any (select t from Team t)
