@@ -139,3 +139,27 @@
     SQL: select count(m.id) as cnt from Member m
 
     이렇게 바꿔줍니다
+
+=== 5. Named 쿼리 ===
+
+    Named 쿼리가 뭐냐면
+    미리 JPQL 을 작성해두고 이름 붙여서 반복해서 사용하는것입니다
+    장점으로는 애플리케이션 로딩 시점에 초기화해주기 떄문에 반복 사용하는 경우 성능 최적화에 좋겠죠
+    근데 한계가 있음
+    엔티티 클래스 객체당 하나밖에 못만듭니다
+
+    예시)
+    @Entity
+    @NamedQuery(
+        name = "Member.findByUsername"
+        query = "select m from Member m where m.username = :username"
+    )
+    public class Member {
+
+    }
+
+    그리고 사용하는 곳에서 파라미터 바인딩 해주면 됩니다
+    XML 에도 작성할 수 있는데 이건 생략하고
+
+    이 Named 쿼리를 Spring Data JPA 에서
+    Repository 인터페이스에 @Query() 로 작성할 때 사용한다는 걸 알아두면 됨
