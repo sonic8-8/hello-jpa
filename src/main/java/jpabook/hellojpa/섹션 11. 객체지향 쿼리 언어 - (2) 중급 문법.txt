@@ -163,3 +163,32 @@
 
     이 Named 쿼리를 Spring Data JPA 에서
     Repository 인터페이스에 @Query() 로 작성할 때 사용한다는 걸 알아두면 됨
+
+=== 6. 벌크 연산 ===
+
+    벌크 연산이 뭐냐면
+    보통 JPQL 에서 사용하는 select 가 아니라
+    update 나 delete 같은 쿼리를 말합니다
+
+    변경 감지를 통해 데이터베이스에 데이터를 수정할 수 있긴 하지만
+    쿼리를 굉장히 많이 날려야해서 성능에 좋지 않습니다
+    예를 들어, 변경된 데이터가 100건이면 100번의 쿼리를 날려야하는 식임
+
+    이럴때 벌크 연산을 사용해주면 됩니다
+    근데 주의해야할 게 있음
+    그게 뭐냐면
+    select 같은 일반적이 조회는 영속성 컨텍스트를 거쳐서 DB 에 쿼리를 날리지만
+    벌크 연산은 직접 DB 에 쿼리를 날리기 때문에
+    1차 캐시에 데이터가 즉시 반영이 안됩니다
+
+    그래서 벌크 연산을 할 경우엔
+    영속성 컨텍스트를 따로 초기화 해줘야함
+
+    예시)
+    int resultCount = em.createQuery("update Product p set p.price = p.price * 1.1 where p.stockAmount < :stockAmount")
+                            .setParameter("stockAmount", 10)
+                            .executeUpdate();
+    em.clear()
+    em.find(~)
+
+    이런식으로 하라는 것임
