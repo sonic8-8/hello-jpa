@@ -127,3 +127,15 @@
 
     이런식으로 하면 됨
 
+=== 4. 엔티티 직접 사용 ===
+
+    JPQL 에서 엔티티를 직접 사용할 때
+    SQL 은 어떻게 바꿔줄까요
+
+    결론부터 말하자면 엔티티의 기본 식별자를 가지고 쿼리를 작성해줍니다
+
+    예시)
+    JPQL: select count(m) from Member m
+    SQL: select count(m.id) as cnt from Member m
+
+    이렇게 바꿔줍니다
